@@ -4,10 +4,6 @@ resource "aws_vpc" "main" {
   instance_tenancy = "default"
 }
 
-resource "aws_internet_gateway" "internet_gateway" {
-  vpc_id = aws_vpc.main.id
-}
-
 resource "aws_subnet" "public_subnet" {
   vpc_id                  = aws_vpc.main.id
   map_public_ip_on_launch = true
@@ -17,14 +13,24 @@ resource "aws_subnet" "public_subnet" {
 
 resource "aws_subnet" "private_subnet_1" {
   vpc_id            = aws_vpc.main.id
-  availability_zone = "eu-central-1a"
+  availability_zone = "eu-central-1b"
   cidr_block        = "192.168.1.0/24"
 }
 
 resource "aws_subnet" "private_subnet_2" {
   vpc_id            = aws_vpc.main.id
-  availability_zone = "eu-central-1b"
+  availability_zone = "eu-central-1c"
   cidr_block        = "192.168.2.0/24"
+}
+
+resource "aws_subnet" "private_subnet_3" {
+  vpc_id            = aws_vpc.main.id
+  availability_zone = "eu-central-1b"
+  cidr_block        = "192.168.3.0/24"
+}
+
+resource "aws_internet_gateway" "internet_gateway" {
+  vpc_id = aws_vpc.main.id
 }
 
 resource "aws_route_table" "public_route_table" {

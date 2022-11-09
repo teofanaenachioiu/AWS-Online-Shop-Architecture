@@ -1,5 +1,5 @@
 resource "aws_ecs_cluster" "ecs_cluster" {
-  name = "cluster"
+  name = "ecs_cluster"
 
   lifecycle {
     create_before_destroy = true
@@ -9,7 +9,7 @@ resource "aws_ecs_cluster" "ecs_cluster" {
 resource "aws_ecs_task_definition" "ecs_task_definition" {
   container_definitions = jsonencode([
     {
-      name      = "container"
+      name      = "ecs_container"
       image     = "${aws_ecr_repository.repository.repository_url}"
       cpu       = 1024
       memory    = 900
@@ -24,7 +24,7 @@ resource "aws_ecs_task_definition" "ecs_task_definition" {
     }
   ])
 
-  family                   = "task_definition_family"
+  family                   = "ecs_task_definition_family"
   memory                   = 900
   cpu                      = 1024
   network_mode             = "host"
@@ -35,7 +35,7 @@ resource "aws_ecs_task_definition" "ecs_task_definition" {
 }
 
 resource "aws_ecs_service" "ecs_service" {
-  name            = "service"
+  name            = "ecs_service"
   cluster         = aws_ecs_cluster.ecs_cluster.id
   depends_on      = [aws_iam_role_policy_attachment.iam_role_policy_attchm, aws_alb_listener.alb_listener]
   task_definition = aws_ecs_task_definition.ecs_task_definition.arn
@@ -43,7 +43,7 @@ resource "aws_ecs_service" "ecs_service" {
 
   load_balancer {
     target_group_arn = aws_alb_target_group.target_group.arn
-    container_name   = "container"
+    container_name   = "ecs_container"
     container_port   = 8080
   }
 }
